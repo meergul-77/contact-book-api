@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import './TodoList.css';
 import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CreateIcon from '@material-ui/icons/Create';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { UnfoldLessTwoTone } from '@material-ui/icons';
+import {todoContext} from '../../contexts/TodoContext';
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 
+const TodoList = () => {
 
-const TodoList = (props) => {
+    const {contacts, getcontactsData, deleteTask, editTodo, detailsTodo} = useContext(todoContext)
 
+    useEffect(() => {
+        getcontactsData()
+    }, [])
     return (
-        <ul className ="ul_list">
-            {props.todos.map((item, index) => 
+        <ul>
+            {contacts.map(item => (
             <li className="liStyle" key = {item.id}>
-                <Avatar><AccountCircleIcon /></Avatar>{item.name} {item.lastName} {item.number}
-                <IconButton aria-label="delete"  onClick = {() => props.handleDelete(item.id)}><DeleteIcon /></IconButton>
-                <IconButton variant="outlined"  className ="btn-edit" onClick = {() => props.handleEdit(index)}><CreateIcon /></IconButton>
-
-            </li> )}
+                <Avatar color="primary"><AccountCircleIcon /></Avatar>{item.name} {item.lastName} {item.number}
+                <IconButton aria-label="delete" color="primary"  onClick = {() => deleteTask(item.id)}><DeleteIcon /></IconButton>
+                <Link to="/edit">
+                <IconButton variant="outlined" color="primary"  className ="btn-edit" onClick = {() => editTodo(item.id)}><CreateIcon /></IconButton>
+                </Link>
+                <Link to="/details">
+                <Button onClick = {() => detailsTodo(item.id)} variant="contained" color="primary" style={{width:"50px", height:"26px", fontSize: "10px"}} >Details</Button>
+                </Link>
+            </li> ))}
         </ul>
     );
 };
